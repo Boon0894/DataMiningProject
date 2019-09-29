@@ -1,0 +1,35 @@
+import requests
+page = requests.get("https://www.klsescreener.com/v2/news")
+page
+
+from bs4 import BeautifulSoup
+soup = BeautifulSoup(page.content, 'html.parser')
+
+print(soup.prettify())
+
+page = requests.get("https://www.klsescreener.com/v2/news")
+soup = BeautifulSoup(page.content, 'html.parser')
+whole = soup.find(id="section")
+Par_News = whole.find_all(class_="article flex-1")
+News = Par_News[0]
+print(News)
+print(News.prettify())
+
+Title = whole.find(class_="figcaption").get_text()
+Newspaper_Date = whole.find(class_="item-title-secondary subtitle").get_text()
+print(Title)
+print(Newspaper_Date)
+
+News_Title = whole.find_all(class_="figcaption")
+News = [nw.get_text() for nw in News_Title]
+Newspaper= whole.find_all(class_="item-title-secondary subtitle")
+Newspaper_Date = [nw.get_text() for nw in Newspaper]
+print(News)
+print(Newspaper_Date)
+
+import pandas as pd
+Stock_News = pd.DataFrame({
+    "Newspaper_Date": Newspaper_Date,
+    "News": News,
+})
+Stock_News
